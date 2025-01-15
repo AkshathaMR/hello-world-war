@@ -23,7 +23,11 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.4.0</version>
 			</plugin>
-
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-deploy-plugin</artifactId>
+			    <version>2.7</version> <!-- Ensure this matches your setup -->
+			</plugin>
 			 <plugin>
 		            <groupId>org.sonarsource.scanner.maven</groupId>
 		            <artifactId>sonar-maven-plugin</artifactId>

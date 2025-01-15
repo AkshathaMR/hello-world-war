@@ -5,7 +5,7 @@
 <body>
 	<h1>Hello World!</h1>
 	<p>
-		It is now
+		Here is build is created by github CI and deployed using jenkins 
 		<%= new java.util.Date() %></p>
 	<p>
 		You are coming from 

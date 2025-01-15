@@ -1,40 +1,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-        <modelVersion>4.0.0</modelVersion>
-        <groupId>com.efsavage</groupId>
-        <artifactId>hello-world-war</artifactId>
-        <version>0.0.2</version>
-        <packaging>war</packaging>
-
-<distributionManagement>
-    <repository>
-        <id>central</id>
-        <name>a0c2jzmdr645f-artifactory-primary-0-releases</name>
-        <url>https://triali9wy2g.jfrog.io/artifactory/hello-world-war-libs-release</url>
-    </repository>
-</distributionManagement>
-     
-
-        <name>Hello World Web Application Repository</name>
-        <description>Simplest possible Java Webapp</description>
-
-        <build>
-                <plugins>
-                        <plugin>
-                                <groupId>org.mortbay.jetty</groupId>
-                                <artifactId>jetty-maven-plugin</artifactId>
-                                <version>8.1.5.v20120716</version>
-                                <configuration>
-                                        <scanIntervalSeconds>0</scanIntervalSeconds>
-                                </configuration>
-                        </plugin>
-                        <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-war-plugin</artifactId>
-                                <version>3.4.0</version>
-                        </plugin>
-
-                </plugins>
-        </build>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.efsavage</groupId>
+	<artifactId>hello-world-war</artifactId>
+	<version>1.0.${env.GITHUB_RUN_NUMBER}</version>
+	<packaging>war</packaging>
+	<name>Hello World Web Application Repository</name>
+	<description>Simplest possible Java Webapp</description>
+	<distributionManagement>
+	    <repository>
+	        <id>hello-world-war-libs-release</id>
+	        <name>hello_world_war-libs-release</name>
+	        <url>http://15.206.209.105:8082/artifactory/hello-world-war-libs-release/</url>
+	    </repository>
+  	</distributionManagement>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>8.1.5.v20120716</version>
+				<configuration>
+					<scanIntervalSeconds>0</scanIntervalSeconds>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.4.0</version>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>

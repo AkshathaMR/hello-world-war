@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        ARTIFACTORY_URL = "http://3.110.28.98:8082/artifactory/hello-world-war-libs-release/com/jfrog/my-jfrog-app/"
+        ARTIFACTORY_URL = "http://13.233.201.174:8082/artifactory/hello-world-war-libs-release/com/jfrog/my-jfrog-app/"
       
         TOMCAT_WEBAPPS_DIR = "/opt/apache-tomcat-10.1.34/webapps"
         TOMCAT_HOME = "/opt/apache-tomcat-10.1.34"
@@ -18,7 +18,7 @@ pipeline {
                     
                       // Download the WAR file
                       sh """
-                        curl -u ${USERNAME}:${API_KEY} -O "http://3.110.28.98:8082/artifactory/hello-world-war-libs-release/com/jfrog/my-jfrog-app/hello-world-war-33.war"
+                        curl -u ${USERNAME}:${API_KEY} -O "http://13.233.201.174:8082/artifactory/hello-world-war-libs-release/com/jfrog/my-jfrog-app/hello-world-war-33.war"
                       """
 
                     

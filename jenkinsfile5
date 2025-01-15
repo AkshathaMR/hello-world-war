@@ -1,0 +1,129 @@
+pipeline {
+    agent any
+
+    environment {
+        GITHUB_TOKEN = credentials('') // GitHub personal access token stored in Jenkins credentials
+        REPO_OWNER = "AkshathaMR"        // Replace with your GitHub username or organization
+        REPO_NAME = "hello-world-war"         // Replace with your repository name
+        TOMCAT_WEBAPPS = "/root/apache-tomcat-10.1.34/webapps" // Path to Tomcat webapps folder
+        TOMCAT_PORT = "8085"                           // Will be dynamically set
+    }
+
+    stages {
+        stage('Fetch Build Number') {
+            steps {
+                script {
+                    echo "Fetching the latest workflow runs for ${REPO_OWNER}/${REPO_NAME}..."
+                    
+                    // Fetch the latest workflow runs from GitHub Actions
+                    def response = sh(
+                        script: """curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+                        "https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/runs" """,
+                        returnStdout: true
+                    )
+                    
+                    // Extract the latest build number
+                    def buildNumber = sh(
+                        script: "echo '${response}' | jq -r '.workflow_runs[0].run_number'",
+                        returnStdout: true
+                    ).trim()
+
+                    if (!buildNumber) {
+                        error("Error: Could not fetch build number.")
+                    }
+
+                    echo "Latest Build Number: ${buildNumber}"
+                    env.BUILD_NUMBER = buildNumber
+                }
+            }
+        }
+
+        stage('Download Artifact') {
+            steps {
+                script {
+                    echo "Downloading the artifact for build number: ${BUILD_NUMBER}..."
+
+                    // Fetch artifacts metadata from GitHub Actions
+                    def artifactsResponse = sh(
+                        script: """curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+                        "https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/artifacts" """,
+                        returnStdout: true
+                    )
+
+                    // Parse JSON to get the artifact matching the build number
+                    def artifacts = readJSON text: artifactsResponse
+                    def artifact = artifacts.artifacts.find { it.name == "app-artifact-${BUILD_NUMBER}" }
+
+                    if (!artifact) {
+                        error("Error: Artifact for build number ${BUILD_NUMBER} not found.")
+                    }
+
+                    echo "Found artifact: ${artifact.name} (ID: ${artifact.id})"
+                    
+                    // Download the artifact
+                    sh """
+                    curl -L -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+                    ${artifact.archive_download_url} \
+                    -o artifact.zip
+                    """
+                    
+                    // Unzip the artifact
+                    sh "unzip -o artifact.zip -d build"
+                }
+            }
+        }
+
+        stage('Detect Tomcat Port') {
+            steps {
+                script {
+                    echo "Detecting Tomcat server port..."
+                    
+                    // Use a command to dynamically detect the Tomcat port (adjust as needed)
+                    def tomcatPort = sh(
+                        script: "grep -oP '(?<=<Connector port=\")\\d+' /path/to/tomcat/conf/server.xml",
+                        returnStdout: true
+                    ).trim()
+
+                    if (!tomcatPort) {
+                        error("Error: Could not detect Tomcat port.")
+                    }
+
+                    echo "Detected Tomcat port: ${tomcatPort}"
+                    env.TOMCAT_PORT = tomcatPort
+                }
+            }
+        }
+
+        stage('Deploy WAR to Tomcat') {
+            steps {
+                script {
+                    echo "Deploying WAR file to Tomcat on port ${TOMCAT_PORT}..."
+
+                    // Find the WAR file and copy it to the Tomcat webapps folder
+                    def warFile = sh(script: "ls build/*.war", returnStdout: true).trim()
+                    if (!fileExists(warFile)) {
+                        error("WAR file not found in the artifact!")
+                    }
+
+                    echo "Deploying WAR file: ${warFile}"
+                    sh "cp ${warFile} ${TOMCAT_WEBAPPS}"
+                }
+            }
+        }
+
+        stage('Restart Tomcat') {
+            steps {
+                script {
+                    echo "Restarting Tomcat server on port ${TOMCAT_PORT}..."
+
+                    // Adjust the paths to match your Tomcat setup
+                   sh """
+                    /path/to/tomcat/bin/shutdown.sh || true
+                    sleep 5
+                    /path/to/tomcat/bin/startup.sh
+                    """
+                }
+            }
+        }
+    }
+}

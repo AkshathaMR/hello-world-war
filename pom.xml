@@ -3,18 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.efsavage</groupId>
 	<artifactId>hello-world-war</artifactId>
-	<version>1.0.${env.GITHUB_RUN_NUMBER}</version>
+	<version>1.0.0</version>
 	<packaging>war</packaging>
 	<name>Hello World Web Application Repository</name>
 	<description>Simplest possible Java Webapp</description>
-	<distributionManagement>
-	    <repository>
-	        <id>hello-world-war-libs-release</id>
-	        <name>hello_world_war-libs-release</name>
-	        <url>http://3.110.28.98:8082/artifactory/hello-world-war-libs-release/</url>
-		    
-	    </repository>
-  	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -30,7 +23,13 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.4.0</version>
 			</plugin>
+
+			 <plugin>
+		            <groupId>org.sonarsource.scanner.maven</groupId>
+		            <artifactId>sonar-maven-plugin</artifactId>
+		            <version>4.0.0.4121</version> <!-- Or another compatible version -->
+		        </plugin>
+			
 		</plugins>
 	</build>
-
 </project>

@@ -18,7 +18,7 @@ pipeline {
                     
                       // Download the WAR file
                       sh """
-                        curl -u ${USERNAME}:${API_KEY} -O "http://3.110.28.98:8082/artifactory/hello-world-war-libs-release/com/jfrog/my-jfrog-app/hello-world-war-31.war"
+                        curl -u ${USERNAME}:${API_KEY} -O "http://3.110.28.98:8082/artifactory/hello-world-war-libs-release/com/jfrog/my-jfrog-app/hello-world-war-33.war"
                       """
 
                     

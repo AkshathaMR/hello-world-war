@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        GITHUB_TOKEN = ${{ secrets.TOKEN }}// GitHub personal access token stored in Jenkins credentials
+        GITHUB_TOKEN = credentials('github-token') // GitHub personal access token stored in Jenkins credentials
         REPO_OWNER = "AkshathaMR"        // Replace with your GitHub username or organization
         REPO_NAME = "hello-world-war"         // Replace with your repository name
         TOMCAT_WEBAPPS = "/root/apache-tomcat-10.1.34/webapps" // Path to Tomcat webapps folder
